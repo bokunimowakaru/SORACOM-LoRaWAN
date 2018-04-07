@@ -6,7 +6,7 @@ Example 01: Arduinoマイコン内部温度センサの取得値を送信する
 
 #include <lorawan_client.h>                 // LoRaWAN用ライブラリの組み込み
 #define PIN_LED 13                          // Digital 13にLEDを接続
-#define INTERVAL_MS 58000                   // 送信待ち時間(ms)
+#define INTERVAL_MS 57000                   // 送信待ち時間(ms)
 #define TEMP_OFFSET 0.0                     // 温度補正値（℃）
 LoRaWANClient client;                       // LoRaWAN Client
 
@@ -19,7 +19,6 @@ void setup(){                               // 起動時に一度だけ実行す
 }
 
 void loop(){                                // 繰り返し実行する関数
-    digitalWrite(PIN_SLP,HIGH);             // LoRaWANモジュールのスリープ解除
     float temp=getTemp()+TEMP_OFFSET;       // 温度を取得し変数tempへ保存
     char val[6],data[12];                   // 文字配列型変数valとdataを定義
     dtostrf(temp,-1,1,val);                 // 温度値を文字配列型に変換
@@ -27,6 +26,5 @@ void loop(){                                // 繰り返し実行する関数
     Serial.println();                       // 改行をシリアル出力表示
     Serial.println(data);                   // 送信データをシリアル出力表示
     client.sendData(data);                  // データを送信(最大11文字まで)
-    digitalWrite(PIN_SLP,LOW);              // スリープ解除ピンのリセット
     delay(INTERVAL_MS);                     // 次回の送信までの待ち時間
 }
