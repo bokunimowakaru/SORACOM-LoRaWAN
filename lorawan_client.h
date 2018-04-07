@@ -9,8 +9,10 @@
 #define SERIAL_WAIT_TIME 1000
 #define NETWORK_WAIT_TIME 5000
 #define JOIN_RETRY_INTERVAL 5000
-#define JOIN_RETRY_MAX 0 // 0 = unlimited
+#define JOIN_RETRY_MAX 3 // 0 = unlimited
 #define MAX_PAYLOAD_SIZE 11
+
+#define DEBUG false
 
 typedef void (* CALLBACK)(String);
 
@@ -21,10 +23,12 @@ private:
 public:
   LoRaWANClient();
   bool connect(bool force_reconnect=true);
-  bool sendCmd(String cmd, String waitStr, CALLBACK p=NULL,  bool echo=true, int waitTime=SERIAL_WAIT_TIME);
-  bool sendBinary(byte *data_pointer, int data_size, short port=1, CALLBACK p=NULL, bool echo=true);
-  bool sendData(char *msg, short port=1, CALLBACK p=NULL, bool echo=true);
-  bool sendData(unsigned long, short port=1, CALLBACK p=NULL, bool echo=true);
+  bool sleep(void);
+  bool deep_sleep(void);
+  bool sendCmd(String cmd, String waitStr, CALLBACK p=NULL,  bool echo=DEBUG, int waitTime=SERIAL_WAIT_TIME);
+  bool sendBinary(byte *data_pointer, int data_size, short port=1, CALLBACK p=NULL, bool echo=DEBUG);
+  bool sendData(char *msg, short port=1, CALLBACK p=NULL, bool echo=DEBUG);
+  bool sendData(unsigned long, short port=1, CALLBACK p=NULL, bool echo=DEBUG);
 
 private:
   void checkRx(String* rsp, CALLBACK p);

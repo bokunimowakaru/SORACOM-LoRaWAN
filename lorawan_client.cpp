@@ -10,43 +10,44 @@ LoRaWANClient::LoRaWANClient() {
 bool LoRaWANClient::connect(bool force_reconnect){
   int waitTime=INIT_WAIT_TIME;
   String cmd;
+  bool echo=DEBUG;
 
   ss.listen();
 
-  sendCmd("\n", "",false);
+  sendCmd("\n", "",NULL, false);
   while (ss.available() > 0) {
     char ch = ss.read();
     Serial.print(ch);
   }
 
-  if(!force_reconnect)
-  {
-    Serial.println("Checking if already joined or not ... ");
-    if (!sendCmd("lorawan get_join_status", "unjoined", NULL, true, waitTime)) {
-      Serial.println("already joined.");
+  if(!force_reconnect) {
+    ECHOLN("Checking if already joined or not ... ");
+    if (sendCmd("lorawan get_join_status", "joined", NULL, DEBUG, waitTime)) {
+      ECHOLN("already joined.");
       return true;
     }
-    Serial.println("unjoined.");
-  }
-
-  //
-  // LoRa module status clear
-  //
-  if (!sendCmd("mod factory_reset", "Ok", NULL, true, waitTime)) {
-    Serial.println("Request Failed");
-    return false;
-  }
-  if (!sendCmd("mod set_echo off", "Ok", NULL, true, waitTime)) {
-    Serial.println("Request Failed");
-    return false;
-  }
-  if (!sendCmd("mod save", "Ok", NULL, true, waitTime)) {
-    Serial.println("Request Failed");
-    return false;
-  }
-  if (!sendCmd("mod reset", "", NULL, true, waitTime)) {
-    Serial.println("Request Failed");
-    return false;
+    ECHOLN("unjoined.");
+  } else {
+      //
+      // LoRa module status clear
+      //
+      Serial.println("Initializing LoRa module Flash");
+      if (!sendCmd("mod factory_reset", "Ok", NULL, DEBUG, waitTime)) {
+        Serial.println("'factory_reset' Request Failed");
+        return false;
+      }
+      if (!sendCmd("mod set_echo off", "Ok", NULL, DEBUG, waitTime)) {
+        Serial.println("'set_echo off' Request Failed");
+        return false;
+      }
+      if (!sendCmd("mod save", "Ok", NULL, DEBUG, waitTime)) {
+        Serial.println("'save' Request Failed");
+        return false;
+      }
+      if (!sendCmd("mod reset", "", NULL, DEBUG, waitTime)) {
+        Serial.println("'reset' Request Failed");
+        return false;
+      }
   }
 
   //
@@ -69,8 +70,12 @@ bool LoRaWANClient::connect(bool force_reconnect){
   // LoRa module join to Network Server by OTAA
   //
   int retry=0;
-  while (!sendCmd("lorawan join otaa", "accepted", NULL, true, JOIN_RETRY_INTERVAL)) {
+  while (!sendCmd("lorawan join otaa", "accepted", NULL, DEBUG, JOIN_RETRY_INTERVAL)) {
     retry++;
+    delay(2200);
+    if (sendCmd("lorawan get_join_status", "joined", NULL, DEBUG, waitTime)) {
+      return true;
+    }
     Serial.print("'lorawan join otaa' Failed (");
     Serial.print(retry);
     Serial.print("/");
@@ -81,6 +86,26 @@ bool LoRaWANClient::connect(bool force_reconnect){
       Serial.println("Exceeded JOIN_RETRY_MAX attempts.");
       return false;
     }
+  }
+  return true;
+}
+
+bool LoRaWANClient::sleep(void){
+  int waitTime = INIT_WAIT_TIME;
+  if (!sendCmd("mod sleep 0 1 0", "", NULL, DEBUG, waitTime)) {
+    Serial.println("'sleep' Request Failed");
+    delay(16);
+    return false;
+  }
+  return true;
+}
+
+bool LoRaWANClient::deep_sleep(void){
+  int waitTime=INIT_WAIT_TIME;
+  if (!sendCmd("mod sleep 1 1 0", "", NULL, DEBUG, waitTime)) {
+    Serial.println("'deep_sleep' Request Failed");
+    delay(16);
+    return false;
   }
   return true;
 }
@@ -170,6 +195,7 @@ bool LoRaWANClient::sendData(char *data, short port, CALLBACK p, bool echo){
   else
   {
     ECHOLN(" ... failed.");
+    Serial.println("'sendData(char*)' failed");
     return false;
   }
 }
@@ -195,6 +221,7 @@ bool LoRaWANClient::sendData(unsigned long data, short port, CALLBACK p, bool ec
   else
   {
     ECHOLN(" ... failed.");
+    Serial.println("'sendData(long)' failed");
     return false;
   }
 }
@@ -227,6 +254,7 @@ bool LoRaWANClient::sendBinary(byte *data_pointer, int data_size, short port, CA
   else
   {
     ECHOLN(" ... failed.");
+    Serial.println("'sendBinary' failed");
     return false;
   }
 
