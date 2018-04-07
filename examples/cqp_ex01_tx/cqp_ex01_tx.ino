@@ -19,6 +19,7 @@ void setup(){                               // 起動時に一度だけ実行す
 }
 
 void loop(){                                // 繰り返し実行する関数
+    digitalWrite(PIN_LED,HIGH);             // LoRaWANモジュールのスリープ解除
     float temp=getTemp()+TEMP_OFFSET;       // 温度を取得し変数tempへ保存
     char val[6],data[12];                   // 文字配列型変数valとdataを定義
     dtostrf(temp,-1,1,val);                 // 温度値を文字配列型に変換
@@ -26,5 +27,6 @@ void loop(){                                // 繰り返し実行する関数
     Serial.println();                       // 改行をシリアル出力表示
     Serial.println(data);                   // 送信データをシリアル出力表示
     client.sendData(data);                  // データを送信(最大11文字まで)
+    digitalWrite(PIN_LED,LOW);              // スリープ解除ピンのリセット
     delay(INTERVAL_MS);                     // 次回の送信までの待ち時間
 }
