@@ -72,20 +72,23 @@ bool LoRaWANClient::connect(bool force_reconnect){
   int retry=0;
   while (!sendCmd("lorawan join otaa", "accepted", NULL, DEBUG, JOIN_RETRY_INTERVAL)) {
     retry++;
+    /*
     delay(2200);
     if (sendCmd("lorawan get_join_status", "joined", NULL, DEBUG, waitTime)) {
       return true;
     }
-    Serial.print("'lorawan join otaa' Failed (");
+    */
+    Serial.print("'lorawan join otaa' retried (");
     Serial.print(retry);
     Serial.print("/");
-    Serial.print(JOIN_RETRY_MAX);
-    Serial.println(")");
-    if(retry == JOIN_RETRY_MAX)
-    {
-      Serial.println("Exceeded JOIN_RETRY_MAX attempts.");
-      return false;
-    }
+    if(!force_reconnect){
+        Serial.print(JOIN_RETRY_MAX);
+        Serial.println(")");
+        if(retry >= JOIN_RETRY_MAX ){
+          Serial.println("Exceeded JOIN_RETRY_MAX attempts.");
+          return false;
+        }
+    } else Serial.print("-)");
   }
   return true;
 }

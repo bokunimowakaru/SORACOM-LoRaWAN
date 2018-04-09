@@ -9,7 +9,7 @@
 #define SERIAL_WAIT_TIME 1000
 #define NETWORK_WAIT_TIME 5000
 #define JOIN_RETRY_INTERVAL 5000
-#define JOIN_RETRY_MAX 3 // 0 = unlimited
+#define JOIN_RETRY_MAX 5 // 0 = unlimited
 #define MAX_PAYLOAD_SIZE 11
 
 #define DEBUG false
