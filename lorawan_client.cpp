@@ -88,7 +88,7 @@ bool LoRaWANClient::connect(bool force_reconnect){
           Serial.println("Exceeded JOIN_RETRY_MAX attempts.");
           return false;
         }
-    } else Serial.print("-)");
+    } else Serial.println("-)");
   }
   return true;
 }
