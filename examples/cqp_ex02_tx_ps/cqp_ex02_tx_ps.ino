@@ -40,7 +40,7 @@ void loop(){                                // 繰り返し実行する関数
         float temp=getTemp()+TEMP_OFFSET;   // 温度を取得し変数tempへ保存
         char val[6],data[12];               // 文字配列型変数valとdataを定義
         dtostrf(temp,-1,1,val);             // 温度値を文字配列型に変換
-        snprintf(data,11,"{\"t\":%s}",val); // JSON形式の送信データに変換
+        snprintf(data,12,"{\"t\":%s}",val); // JSON形式の送信データに変換
         Serial.println();                   // 改行をシリアル出力表示
         Serial.println(data);               // 送信データをシリアル出力表示
         client.sendData(data);              // データを送信(最大11文字まで)

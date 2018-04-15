@@ -54,8 +54,8 @@ void loop(){                                // 繰り返し実行する関数
         Serial.print("m ");
         if( client.connect(false) ){        // 再接続
             char val[6],data[12];           // 文字配列型変数valとdataを定義
-            dtostrf(d,-1,1,val);            // 測定値を文字配列型に変換
-            snprintf(data,11,"{\"d\":%s}",val); // JSON形式の送信データに変換
+            itoa((unsigned short)d,val,10); // 整数値へ変換後、文字配列型へ変換
+            snprintf(data,12,"{\"d\":%s}",val); // JSON形式の送信データに変換
             Serial.println(data);           // 送信データをシリアル出力表示
             client.sendData(data);          // データを送信(最大11文字まで)
             delay(13);                      // シリアル出力の完了待ち
