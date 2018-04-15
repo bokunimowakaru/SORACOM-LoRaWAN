@@ -9,7 +9,7 @@ GPSモジュール：u-blox NEO-6M NEO-6M-0-001
 #include <lorawan_client.h>                 // LoRaWAN用ライブラリの組み込み
 #define PIN_LED 13                          // Digital 13にLEDを接続
 #define PIN_SLP 7                           // スリープ解除ピン(Digital 7固定)
-#define INTERVAL_MS 25000                   // 送信待ち時間(ms)
+#define INTERVAL_MS 23000                   // 送信待ち時間(ms)
 #define INTERVAL_WDT 1000                   // スリープ間隔(ms)
 #define TEMP_OFFSET 0.0                     // 温度補正値（℃）
 #define SLEEP_MODE 0                        // 0:ノーマルスリープ、1:ディープ
