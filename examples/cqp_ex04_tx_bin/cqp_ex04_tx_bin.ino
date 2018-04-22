@@ -65,7 +65,7 @@ void loop(){                                // 繰り返し実行する関数
     time_prev += payload.time;              // 今回のCPU時間を保存
     if( client.connect(false) ){            // 再接続
         Serial.print("{\"temp\":");         // (シリアルモニタ用)温度表示
-        Serial.print(payload.temp,3);
+        Serial.print(payload.temp,1);
         Serial.print(",\"vcc\":");          // (シリアルモニタ用)電圧表示
         Serial.print((float)payload.vcc/1000,3);
         Serial.print(",\"time\":");         // (シリアルモニタ用)時間表示
