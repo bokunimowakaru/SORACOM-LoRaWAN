@@ -27,6 +27,6 @@ void loop(){                                // 繰り返し実行する関数
     Serial.println();                       // 改行をシリアル出力表示
     Serial.println(data);                   // 送信データをシリアル出力表示
     client.sendData(data);                  // データを送信(最大11文字まで)
-    digitalWrite(PIN_LED,LOW);              // スリープ解除ピンのリセット
+    digitalWrite(PIN_LED,LOW);              // LEDの消灯
     delay(INTERVAL_MS);                     // 次回の送信までの待ち時間
 }
