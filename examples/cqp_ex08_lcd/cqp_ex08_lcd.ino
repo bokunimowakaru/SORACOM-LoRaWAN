@@ -2,11 +2,18 @@
 Example 08: 受信メッセージをI2C接続LCDへ表示する
 
                                                Copyright (c) 2018 Wataru KUNINO
+********************************************************************************
+メッセージ送信方法（ASCIIコードで「Hello!」を送信し、LCDへ表示する）
+
+SORACOMコンソールを起動し、[LoRaデバイス管理]から対象デバイスを選択し、[操作]
+メニューから[ダウンリンク通信]を選び、以下を入力してから[送信]ボタンを押します。
+	データ	48656c6c6f21
+	fPort	2
 *******************************************************************************/
 
 #include <lorawan_client.h>                 // LoRaWAN用ライブラリの組み込み
 #define PIN_LED 13                          // Digital 13にLEDを接続
-#define INTERVAL_MS 9000                    // 送信待ち時間(ms)
+#define INTERVAL_MS 27000                   // 送信待ち時間(ms)
 LoRaWANClient client;                       // LoRaWAN Client
 
 void lora_rx(String s){
@@ -36,6 +43,6 @@ void setup(){                               // 起動時に一度だけ実行す
 void loop(){                                // 繰り返し実行する関数
     digitalWrite(PIN_LED,LOW);              // LEDの消灯
     Serial.println("data request");         // データの受信要求表示
-    client.sendBinary("",1,1,lora_rx);      // データ確認用の送信とデータ受信
+    client.sendBinary("",1,2,lora_rx);      // データ確認用の送信とデータ受信
     delay(INTERVAL_MS);                     // 次回の送信までの待ち時間
 }
