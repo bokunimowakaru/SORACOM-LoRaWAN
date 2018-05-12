@@ -7,7 +7,7 @@ Digital 12にLoRaモデムのRXを接続
 *******************************************************************************/
 
 #define PIN_LED 13                          // Digital 13にLEDを接続
-#define INTERVAL_MS 8000                    // 送信待ち時間(ms)
+#define INTERVAL_MS 30000                   // 送信待ち時間(ms)
 #define TEMP_OFFSET 0.0                     // 温度補正値（℃）
 
 void setup(){                               // 起動時に一度だけ実行する関数
