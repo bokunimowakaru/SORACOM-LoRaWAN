@@ -14,7 +14,7 @@ void lora_tx(const char *tx){
 
 int lora_rx(char *rx,int len){
     char c;
-    int i=0;
+    int i=0,ret=0;
     while(ss.available()){
         c=ss.read();
         if(c == '\n') continue;
@@ -23,8 +23,9 @@ int lora_rx(char *rx,int len){
         if(i < len-1 ) i++;
     }
     rx[i]='\0';
-    if(!strcmp(rx,"OK")) return 1;
-    return 0;
+    if(!strcmp(rx,"OK")) ret=1;
+    if(i) Serial.println(rx);
+    return ret;
 }
 
 void lora_flush(){
@@ -41,9 +42,9 @@ int lora_init(){
     while(1){
         lora_tx("AT\r");
         for(i=0;i<5;i++){
+            delay(100);
             lora_rx(rx,8);
             if(!strcmp(rx,"OK")) return 1;
-            delay(100);
         }
         Serial.println("ERROR:lora_init");
         delay(5000);
